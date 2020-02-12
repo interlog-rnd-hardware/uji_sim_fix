@@ -12,8 +12,13 @@ void senddata()
           ctegaki+ "~" + 
           ctegaki1 + "~" +
           tagtrack + ">"; // + "\r\n";
-  kirim.toCharArray(ckirim,43);
+//  kirim.toCharArray(ckirim,43);
   delay(50);
-  HC12.write(ckirim);
-  Serial.println(ckirim);
+  if (oldkirim != kirim)
+      {
+        HC12.println(kirim);       
+      }
+  Serial.println(kirim);
+  delay(50);
+  oldkirim = kirim;
 }
