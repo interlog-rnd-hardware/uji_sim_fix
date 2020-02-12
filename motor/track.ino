@@ -28,11 +28,13 @@ void track()
   {
 //Serial.println(realtag1);
 tagtrack=realtag1;
+oldtagtrack = realtag1;
   }
   else if (realtag1 == 0)
   {
 //Serial.println(realtag2);
 tagtrack=realtag2;
+oldtagtrack=realtag2;
   }
   else
   {
