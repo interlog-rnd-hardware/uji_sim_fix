@@ -22,7 +22,7 @@ SoftwareSerial UHF(12, 13);
 #define volt1 A1
 #define nyalamotor 32
 #define buzzer 30
-#define starting 31
+#define starting 8
 //int IRRX_PIN = 5;
 //int STL = A3;
 const int pdr = A3;
@@ -50,7 +50,7 @@ int tegangan1 = 0;
 int detecttrack = 0;
 int buz=0;
 int leh;
-int tagtrack;
+int tagtrack,oldtagtrack;
 
 float tegaki = 0.0;
 float tegaki1 = 0.0;
@@ -73,6 +73,8 @@ String fin;
 String st;
 String rfiddataa;
 String str_leh;
+String statt;
+String oldkirim;
 
 char id[9];
 char cpdr[2] ;
@@ -153,29 +155,56 @@ void setup()
 //  kiri = "0";
 //  kanan = "0";
   bacasensor= false;
+  rfiddata();
+  bacategangan();
 //   irrecv.enableIRIn();
 //  digitalWrite(IRRX_PIN, HIGH); // Optional Internal Pull-up
-  Wire.begin(9);
-Wire.onReceive(receiveEvent); // register event
+//  Wire.begin(9);
+//  Wire.onReceive(receiveEvent); // register event
 }
 void loop() 
 {
-    delay(100);
-    motorstart();
-    delay(10);
-    id_motor();
-    delay(10);
+  track(); //rfid track in main loop
+  if(panjangrfid < 7) //peserta harus menaruh kartu terlebih dahulu
+  {
     rfiddata();
-    delay(10);
-    stang();
-    delay(10);
-    bacategangan();
-    delay(10);
-    track();
-    delay(10);
-    senddata();
-
-    delay(50);
+  }
+  else if (panjangrfid > 5) //proses setelah peserta tap kartu
+  {
+    if (tagtrack == 101 || tagtrack == 102 || tagtrack == 103 || tagtrack == 104 || tagtrack == 105) //tag standby position
+    {
+      Wire.begin(9);
+      Wire.onReceive(receiveEvent); // data ir helm
+      statt = "standby";
+      senddata();
+    }
+    else if (tagtrack == 3 || tagtrack == 11 || tagtrack == 19 || tagtrack == 23 || tagtrack == 28) // tag finish
+    {
+      rfiddata(); 
+      senddata();
+      statt = "finish";
+    }
+    else if (tagtrack == 0)
+    {
+     
+    }
+    
+    else //kondisi tag start dan ketika memasuki track
+    {
+      stang(); 
+      senddata();
+      statt = "track";
+    }
+    if (statt == "track") //akan mengirim ketika peserta berada dalam track namun melepas salah satu tangan/kaki
+    {
+      stang();
+      if (VSTR == 1 || VSTL==1 || injakr == 1 || injakl == 1)
+      {
+        senddata();
+        delay(100);
+      }
+    }
+    
     st="";
     kirimnama  ="";
     str_tolehr ="";
@@ -186,7 +215,23 @@ void loop()
     s="";
     co="";
     sir="";   
-//        digitalWr t,LOW);
     kiri = "0";
-    kanan = "0";
+    kanan = "0";  
+  }
+  delay(50);
+
+////    motorstart();
+////    delay(10);
+//    id_motor();
+//    delay(10);
+//    rfiddata();
+//    delay(10);
+//    stang();
+//    delay(10);
+//    bacategangan();
+//    delay(10);
+//    track();
+//    delay(10);
+//    senddata();
+    
 }
