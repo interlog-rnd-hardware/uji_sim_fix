@@ -11,10 +11,11 @@ void stang()
 
  footstep();
 
-  if (VSTR == 0 && VSTL==0 && injakr == 0 && injakl == 0)
+ if (VSTR == 0 && VSTL==0 && injakr == 0 && injakl == 0)
  {
   digitalWrite(right,LOW);
   digitalWrite(left,LOW);
   detecttrack = 0;
  }
+
 }
