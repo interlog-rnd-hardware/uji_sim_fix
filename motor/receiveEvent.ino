@@ -10,7 +10,7 @@ void receiveEvent(int howMany) {
   int x = Wire.read();    // receive byte as an integer
   sirr = sir + x;
 //  Serial.println(sirr);
-  if(sirr.startsWith("kiri") /*&& tolkanan == 1*/)
+  if(sirr.startsWith("kiri")) //&& tolkanan == 1)
   {
 //    Serial.println("ini kiri");
     kiri = "1";
@@ -18,16 +18,20 @@ void receiveEvent(int howMany) {
     digitalWrite(left,LOW);    
     tolkanan = 0;    
     digitalWrite(kamera,HIGH);    
+    senddata();
+    delay(100);
   }
 //    kiri = getValue(sirr,' ',1);
 //    Serial.print("kiri : ");
 //    Serial.println(kiri);
-  else if(sirr.startsWith("kanan") /* && detecttrack == 1*/)
+  else if(sirr.startsWith("kanan"))// && detecttrack == 1)
   {
     kanan = "1";
     digitalWrite(right,LOW);
     digitalWrite(left,HIGH);        
-    tolkanan = 1;    
+    tolkanan = 1;
+    senddata();
+    delay(100);    
   }
 //    kanan = getValue(sirr,' ',1);
 //    Serial.print("kanan : ");
